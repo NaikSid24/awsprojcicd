@@ -1,0 +1,19 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Resources:
+  CiCdLambdaFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: lambda_function.handler
+      Runtime: python3.8
+      CodeUri: .
+      Environment:
+        Variables:
+          DYNAMODB_TABLE: "ci_cd_table"
+          SNS_TOPIC: "arn:aws:sns:us-east-1:778815816015:cicd_sns_topic"
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - DynamoDBCrudPolicy:
+            TableName: "ci_cd_table"
+        - SNSPublishMessagePolicy:
+            TopicName: "cicd_sns_topic"

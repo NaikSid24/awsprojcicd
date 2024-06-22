@@ -1,0 +1,7 @@
+{
+  "operation": "create",
+  "data": {
+    "ID": {"S": "123"},
+    "Name": {"S": "Test"}
+  }
+}
