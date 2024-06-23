@@ -28,23 +28,24 @@ resource "aws_iam_role" "lambda_role" {
   }
 }
 
+resource "aws_iam_role_policy_attachment" "lambda_execution_policy" {
+    role  = aws_iam_role.lambda_role.name
+    policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+
+}
 resource "aws_lambda_function" "cicd_lambda" {
     function_name = "cicd_lambda"
     role = aws_iam_role.lambda_role.arn
-    handler = "index.handler"
+    handler = "lambda_function.handler"
     runtime = "python3.8"
-    filename = "lamda_function.zip"
+    filename = "${path.module}/../code/lambda_function.zip"
 
     environment {
         variables = {
-            DYNAMODB_TABLE = aws_dynamodb_table.ci_cd_table.name
-            SNS_TOPIC = aws_sns_topic.cicd_sns_topic.arn
+            DYNAMODB_TABLE = var.dynamodb_table_name
+            SNS_TOPIC = var.sns_topic_arn
         }
     }
 }
 
-resource "aws_iam_role_policy_attachment" "lambda_execution" {
-    role = aws_iam_role.lambda_role.arn
-    policy_arn = "arn:aws:iam::aws:policy/AWSLambdaBasicExecutionRole"
-  
-}
+

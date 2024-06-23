@@ -11,7 +11,7 @@ resource "aws_cognito_user_pool" "user_pool" {
     mfa_configuration = "OPTIONAL"
 
     sms_configuration {
-    external_id = random_id.external_id.hex 
+    external_id = random_id.external_id.hex
     sns_caller_arn = aws_iam_role.cognito_sns_role.arn
   }
 
@@ -20,7 +20,7 @@ resource "aws_cognito_user_pool" "user_pool" {
       name = "email"
       attribute_data_type = "String"
       required = true
-      mutable = false   
+      mutable = false
     }
 
     schema {
@@ -35,6 +35,12 @@ resource "aws_cognito_user_pool" "user_pool" {
       email_subject = "Verification Code"
 }
 alias_attributes = ["email"]
+
+  lifecycle {
+      ignore_changes = [
+        schema
+      ]
+    }
 }
 
 
